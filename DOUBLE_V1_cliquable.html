@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DOUBLE — Prototype V1</title>
+<style>
+:root{
+  --bg:#fbfaf7; --card:#ffffff; --text:#171717; --muted:#77736d;
+  --gold:#c6a55b; --gold2:#e9dbb5; --line:#ece7dc; --danger:#b65454;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:linear-gradient(180deg,#f6f1e5 0,#fbfaf7 28%,#f7f4ec 100%);
+  color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  min-height:100vh;display:flex;justify-content:center;
+}
+#app{
+  width:100%;max-width:430px;min-height:100vh;background:var(--bg);
+  position:relative;overflow:hidden;box-shadow:0 0 50px rgba(0,0,0,.08);
+}
+.screen{display:none;min-height:100vh;padding:28px 22px 104px;animation:fade .28s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.brand{font-family:Georgia,"Times New Roman",serif;letter-spacing:.28em;font-size:27px;text-align:center;margin-top:12px}
+.star{color:var(--gold);font-size:17px;letter-spacing:.35em;text-align:center;margin:12px 0 4px}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:36px;line-height:1.08;margin:22px 0 12px}
+h2{font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:29px;margin:16px 0 8px}
+p{color:var(--muted);line-height:1.55}
+.hero{padding-top:56px;text-align:center}
+.hero h1{font-size:43px;margin-top:30px}
+.hero p{max-width:300px;margin:0 auto 34px}
+.logo-orbit{
+ width:126px;height:126px;border:1px solid var(--gold2);border-radius:50%;margin:22px auto;
+ display:grid;place-items:center;position:relative;background:#fff;
+}
+.logo-orbit:before,.logo-orbit:after{content:"✦";position:absolute;color:var(--gold);font-size:17px}
+.logo-orbit:before{top:-4px;right:16px}.logo-orbit:after{bottom:8px;left:3px;font-size:11px}
+.logo-face{font-family:Georgia,serif;font-size:38px;color:var(--gold)}
+.btn{
+ width:100%;border:none;border-radius:18px;padding:16px 18px;font-size:16px;font-weight:650;
+ background:var(--text);color:white;cursor:pointer;box-shadow:0 7px 20px rgba(0,0,0,.12);margin-top:10px;
+}
+.btn.gold{background:var(--gold);color:#fff}.btn.light{background:#fff;color:var(--text);border:1px solid var(--line);box-shadow:none}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line);box-shadow:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:0 9px 30px rgba(35,28,15,.05);margin:14px 0}
+.field{margin:13px 0}
+label{font-size:13px;color:var(--muted);display:block;margin:0 0 7px 3px}
+input,select{
+ width:100%;padding:14px 15px;border-radius:14px;border:1px solid var(--line);background:#fff;font-size:16px;outline:none;
+}
+.photo-box{
+ aspect-ratio:1/1;border-radius:28px;background:linear-gradient(145deg,#e8dfcd,#f9f6ef);
+ display:grid;place-items:center;border:1px dashed #c9b98f;overflow:hidden;margin:18px 0;
+}
+.photo-box img{width:100%;height:100%;object-fit:cover}
+.photo-placeholder{text-align:center;color:var(--muted)}
+.photo-placeholder b{display:block;color:var(--gold);font-size:50px;font-weight:400;margin-bottom:8px}
+.progress{height:9px;background:#eee9de;border-radius:99px;overflow:hidden;margin:24px 0}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,#b58e3f,#e3ca87);transition:width .5s}
+.analysis-wrap{text-align:center;padding-top:65px}
+.ring{
+ width:174px;height:174px;border-radius:50%;margin:30px auto;display:grid;place-items:center;position:relative;
+ background:conic-gradient(var(--gold) 0deg, var(--gold2) 0deg, #eee9de 0);
+}
+.ring:after{content:"";position:absolute;width:142px;height:142px;border-radius:50%;background:var(--bg)}
+.ring .pct{position:relative;z-index:2;font-family:Georgia,serif;font-size:34px}
+.match-photo{
+ height:340px;border-radius:28px;overflow:hidden;position:relative;background:linear-gradient(135deg,#d9cab2,#f6efe2);
+ border:1px solid var(--line);
+}
+.match-photo img{width:100%;height:100%;object-fit:cover}
+.badge{position:absolute;top:15px;right:15px;background:rgba(255,255,255,.92);padding:10px 13px;border-radius:999px;font-weight:750}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.persona{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.tag{background:#f5f0e4;border:1px solid #eadfc6;border-radius:999px;padding:8px 11px;font-size:13px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.back{width:42px;height:42px;border:1px solid var(--line);background:#fff;border-radius:50%;font-size:20px}
+.heart{font-size:27px}
+.chat{display:flex;flex-direction:column;gap:10px;margin:20px 0}
+.msg{max-width:78%;padding:12px 14px;border-radius:18px;line-height:1.35}
+.msg.them{background:#fff;border:1px solid var(--line);align-self:flex-start}
+.msg.me{background:#1d1d1d;color:#fff;align-self:flex-end}
+.composer{display:flex;gap:8px;position:absolute;left:18px;right:18px;bottom:86px}
+.composer input{flex:1}.composer button{width:48px;border:0;border-radius:14px;background:var(--gold);color:white;font-size:21px}
+.nav{
+ position:absolute;bottom:0;left:0;right:0;height:74px;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);
+ border-top:1px solid var(--line);display:none;justify-content:space-around;align-items:center;padding-bottom:env(safe-area-inset-bottom);
+}
+.nav.show{display:flex}
+.nav button{border:0;background:transparent;color:#8b867c;font-size:20px;padding:10px}
+.nav button.active{color:var(--gold)}
+.small{font-size:12px;color:var(--muted)}
+.center{text-align:center}
+.match-celebrate{text-align:center;padding-top:40px}
+.match-celebrate .big{font-size:58px;color:var(--gold);margin:12px}
+.avatar-row{display:flex;justify-content:center;margin:28px 0}
+.avatar{width:116px;height:116px;border-radius:50%;border:5px solid var(--bg);background:#e7decd;overflow:hidden;margin:0 -14px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.notice{font-size:13px;background:#fff8e7;border:1px solid #ead8a8;padding:12px;border-radius:14px;color:#79663e;margin:12px 0}
+</style>
+</head>
+<body>
+<div id="app">
+
+<section id="home" class="screen active">
+  <div class="hero">
+    <div class="brand">DOUBLE</div>
+    <div class="star">✦</div>
+    <div class="logo-orbit"><div class="logo-face">D</div></div>
+    <h1>Et si ton sosie était quelque part ?</h1>
+    <p>Découvre les personnes qui te ressemblent le plus et rencontre ton double.</p>
+    <button class="btn gold" onclick="go('profile')">Commencer</button>
+    <button class="btn light" onclick="go('discover')">Explorer la démo</button>
+  </div>
+</section>
+
+<section id="profile" class="screen">
+  <div class="topbar"><button class="back" onclick="go('home')">‹</button><div class="brand" style="font-size:19px">DOUBLE</div><span></span></div>
+  <h2>Crée ton profil</h2><p>Quelques infos suffisent pour commencer la recherche.</p>
+  <div class="card">
+    <div class="field"><label>Prénom ou pseudo</label><input id="name" value="Lo"></div>
+    <div class="row">
+      <div class="field"><label>Âge</label><input id="age" type="number" value="25"></div>
+      <div class="field"><label>Genre</label><select id="gender"><option>Femme</option><option>Homme</option><option>Autre</option></select></div>
+    </div>
+    <div class="field"><label>Ville</label><input id="city" value="Metz"></div>
+  </div>
+  <button class="btn" onclick="go('photo')">Continuer</button>
+</section>
+
+<section id="photo" class="screen">
+  <div class="topbar"><button class="back" onclick="go('profile')">‹</button><div class="brand" style="font-size:19px">DOUBLE</div><span></span></div>
+  <h2>Ajoute une photo</h2><p>Choisis une photo nette, de face, avec une bonne lumière.</p>
+  <div class="photo-box" id="photoPreview"><div class="photo-placeholder"><b>＋</b>Ta photo</div></div>
+  <input id="photoInput" type="file" accept="image/*" style="display:none">
+  <button class="btn light" onclick="document.getElementById('photoInput').click()">Choisir une photo</button>
+  <button class="btn gold" onclick="startAnalysis()">Analyser mon visage</button>
+  <div class="notice">Prototype : l'analyse est simulée pour montrer le fonctionnement de l'application.</div>
+</section>
+
+<section id="analysis" class="screen">
+  <div class="analysis-wrap">
+    <div class="brand">DOUBLE</div><div class="star">✦ ✦</div>
+    <h2>Analyse en cours…</h2>
+    <p id="analysisText">Détection des traits du visage</p>
+    <div class="ring" id="ring"><div class="pct" id="pct">0%</div></div>
+    <div class="progress"><div id="bar"></div></div>
+  </div>
+</section>
+
+<section id="discover" class="screen">
+  <div class="topbar"><span></span><div class="brand" style="font-size:19px">DOUBLE</div><span class="heart">✦</span></div>
+  <p class="small">TON MEILLEUR MATCH</p>
+  <div class="match-photo">
+    <svg viewBox="0 0 400 520" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d9c4a3"/><stop offset="1" stop-color="#f4eadc"/></linearGradient></defs>
+      <rect width="400" height="520" fill="url(#g)"/>
+      <circle cx="200" cy="177" r="78" fill="#f1c7ae"/>
+      <path d="M120 175c7-88 153-106 166 1-26-35-47-57-80-59-35-2-60 17-86 58z" fill="#715343"/>
+      <ellipse cx="170" cy="180" rx="7" ry="5" fill="#4b3c35"/><ellipse cx="231" cy="180" rx="7" ry="5" fill="#4b3c35"/>
+      <path d="M181 219q20 15 41 0" stroke="#ab6e67" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M85 520c8-136 63-204 115-204s114 66 122 204z" fill="#efe7dc"/>
+    </svg>
+    <div class="badge">96 %</div>
+  </div>
+  <h2 style="margin-bottom:3px">Camille, 26</h2><p style="margin-top:0">Nancy · 48 km</p>
+  <div class="persona"><span class="tag">Voyages</span><span class="tag">Photo</span><span class="tag">Cinéma</span></div>
+  <div class="row" style="margin-top:15px">
+    <button class="btn light" onclick="toast('Profil passé')">✕ Passer</button>
+    <button class="btn gold" onclick="go('detail')">Voir le profil</button>
+  </div>
+</section>
+
+<section id="detail" class="screen">
+  <div class="topbar"><button class="back" onclick="go('discover')">‹</button><div class="brand" style="font-size:19px">DOUBLE</div><span></span></div>
+  <div class="match-photo" style="height:300px">
+    <svg viewBox="0 0 400 520" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <rect width="400" height="520" fill="#e6d7c3"/><circle cx="200" cy="177" r="78" fill="#f1c7ae"/>
+      <path d="M120 175c7-88 153-106 166 1-26-35-47-57-80-59-35-2-60 17-86 58z" fill="#715343"/>
+      <ellipse cx="170" cy="180" rx="7" ry="5" fill="#4b3c35"/><ellipse cx="231" cy="180" rx="7" ry="5" fill="#4b3c35"/>
+      <path d="M181 219q20 15 41 0" stroke="#ab6e67" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M85 520c8-136 63-204 115-204s114 66 122 204z" fill="#efe7dc"/>
+    </svg><div class="badge">96 % de ressemblance</div>
+  </div>
+  <h2>Camille, 26</h2><p>Nancy · Photographe · « Toujours partante pour découvrir de nouveaux endroits. »</p>
+  <div class="card"><b>Vos points communs</b><div class="persona"><span class="tag">Yeux</span><span class="tag">Sourire</span><span class="tag">Forme du visage</span><span class="tag">Voyages</span></div></div>
+  <button class="btn gold" onclick="go('match')">♡ J’aime ce sosie</button>
+</section>
+
+<section id="match" class="screen">
+  <div class="match-celebrate">
+    <div class="brand">DOUBLE</div><div class="big">✦</div>
+    <h1>C’est un match !</h1><p>Camille t’a aussi ajoutée. Vous pouvez maintenant discuter.</p>
+    <div class="avatar-row">
+      <div class="avatar" id="myAvatar"><div style="display:grid;place-items:center;height:100%;font-size:34px;color:#b18f4a">TOI</div></div>
+      <div class="avatar"><svg viewBox="0 0 200 200" width="100%" height="100%"><rect width="200" height="200" fill="#dfd0bb"/><circle cx="100" cy="85" r="44" fill="#f1c7ae"/><path d="M55 84c7-58 83-62 92 0-22-25-33-31-50-31-20 0-30 10-42 31" fill="#715343"/><path d="M35 200c8-72 42-102 65-102s61 35 68 102" fill="#eee5d9"/></svg></div>
+    </div>
+    <button class="btn gold" onclick="go('chat')">Envoyer un message</button>
+    <button class="btn light" onclick="go('discover')">Continuer à découvrir</button>
+  </div>
+</section>
+
+<section id="chat" class="screen">
+  <div class="topbar"><button class="back" onclick="go('match')">‹</button><div><b>Camille</b><div class="small">96 % de ressemblance</div></div><span>✦</span></div>
+  <div class="chat" id="chatbox">
+    <div class="msg them">Coucou ! C’est fou comme on se ressemble 😄</div>
+    <div class="msg me">Oui ! J’ai cru voir une photo de moi 😂</div>
+    <div class="msg them">On compare nos photos d’enfance ?</div>
+  </div>
+  <div class="composer"><input id="message" placeholder="Écris un message…"><button onclick="sendMsg()">↑</button></div>
+</section>
+
+<section id="me" class="screen">
+  <div class="topbar"><span></span><div class="brand" style="font-size:19px">DOUBLE</div><span>⚙︎</span></div>
+  <div class="center"><div class="avatar" style="margin:24px auto"><div id="mePhoto" style="display:grid;place-items:center;height:100%;font-size:34px;color:#b18f4a">LO</div></div>
+  <h2 id="profileTitle">Lo, 25</h2><p id="profileCity">Metz</p></div>
+  <div class="card"><b>Mon profil</b><p>Photo principale · Centres d’intérêt · Confidentialité</p></div>
+  <button class="btn light" onclick="go('photo')">Changer ma photo</button>
+</section>
+
+<nav class="nav" id="nav">
+ <button onclick="go('discover')" data-tab="discover">⌂</button>
+ <button onclick="go('chat')" data-tab="chat">✉</button>
+ <button onclick="go('me')" data-tab="me">◎</button>
+</nav>
+
+<div id="toast" style="display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:95px;background:#171717;color:white;padding:10px 14px;border-radius:999px;font-size:13px;z-index:20"></div>
+</div>
+
+<script>
+const screens=[...document.querySelectorAll('.screen')];
+const nav=document.getElementById('nav');
+let uploadedSrc=null;
+function go(id){
+  screens.forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const showNav=['discover','chat','me'].includes(id);
+  nav.classList.toggle('show',showNav);
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+  if(id==='me') syncProfile();
+  window.scrollTo(0,0);
+}
+function syncProfile(){
+  const n=document.getElementById('name').value||'Lo', a=document.getElementById('age').value||25, c=document.getElementById('city').value||'Metz';
+  document.getElementById('profileTitle').textContent=`${n}, ${a}`;
+  document.getElementById('profileCity').textContent=c;
+}
+document.getElementById('photoInput').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    uploadedSrc=ev.target.result;
+    document.getElementById('photoPreview').innerHTML=`<img src="${uploadedSrc}" alt="Photo choisie">`;
+    document.getElementById('myAvatar').innerHTML=`<img src="${uploadedSrc}" alt="Ta photo">`;
+    document.getElementById('mePhoto').innerHTML=`<img src="${uploadedSrc}" alt="Ta photo" style="width:100%;height:100%;object-fit:cover">`;
+  };
+  r.readAsDataURL(f);
+});
+function startAnalysis(){
+  go('analysis');
+  const pct=document.getElementById('pct'), bar=document.getElementById('bar'), ring=document.getElementById('ring'), text=document.getElementById('analysisText');
+  let v=0;
+  const phases=[[20,'Détection du visage'],[47,'Analyse des proportions'],[73,'Comparaison avec la communauté'],[100,'Ton meilleur sosie est trouvé']];
+  let p=0;
+  const t=setInterval(()=>{
+    v+=2; if(v>100)v=100;
+    pct.textContent=v+'%'; bar.style.width=v+'%'; ring.style.background=`conic-gradient(var(--gold) ${v*3.6}deg, #eee9de 0)`;
+    if(p<phases.length && v>=phases[p][0]){text.textContent=phases[p][1];p++}
+    if(v>=100){clearInterval(t);setTimeout(()=>go('discover'),650)}
+  },55);
+}
+function sendMsg(){
+  const input=document.getElementById('message'), val=input.value.trim(); if(!val)return;
+  const d=document.createElement('div');d.className='msg me';d.textContent=val;document.getElementById('chatbox').appendChild(d);input.value='';
+  setTimeout(()=>{const r=document.createElement('div');r.className='msg them';r.textContent='J’adore 😄 On continue sur DOUBLE !';document.getElementById('chatbox').appendChild(r)},500);
+}
+document.getElementById('message').addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg()});
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',1300)
+}
+</script>
+</body>
+</html>
