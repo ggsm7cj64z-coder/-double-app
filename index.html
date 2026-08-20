@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DOUBLE — Premium V1</title>
+<style>
+:root{
+  --bg:#f4f0e8;
+  --paper:#faf8f4;
+  --ink:#111111;
+  --muted:#77716a;
+  --line:#dcd5ca;
+  --accent:#b49a6a;
+  --soft:#ebe5db;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#e8e3da;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif}
+body{display:flex;justify-content:center;min-height:100vh}
+#app{width:100%;max-width:430px;min-height:100vh;background:var(--paper);position:relative;overflow:hidden}
+.screen{display:none;min-height:100vh;padding:24px 20px 98px}
+.screen.active{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.wordmark{font-family:"Times New Roman",Georgia,serif;letter-spacing:.36em;font-size:22px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.iconbtn{border:0;background:transparent;font-size:26px;padding:8px 4px;color:var(--ink)}
+.eyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--muted)}
+h1,h2{font-family:"Times New Roman",Georgia,serif;font-weight:400;margin:0}
+h1{font-size:46px;line-height:.98;letter-spacing:-.02em}
+h2{font-size:34px;line-height:1.05}
+p{color:var(--muted);line-height:1.5}
+.hero{padding:28px 20px 36px}
+.hero-copy{padding:34px 0 26px}
+.hero-copy p{font-size:16px;max-width:330px;margin:18px 0 26px}
+.hero-img,.portrait{
+  overflow:hidden;background:#d8cfc2;position:relative;
+}
+.hero-img{height:380px;margin:0 -20px 22px}
+.hero-img svg,.portrait svg{width:100%;height:100%;display:block}
+.btn{width:100%;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:15px 18px;font-size:15px;letter-spacing:.01em;cursor:pointer;border-radius:2px}
+.btn.secondary{background:transparent;color:var(--ink)}
+.btn + .btn{margin-top:10px}
+.form{margin-top:24px;border-top:1px solid var(--line)}
+.field{padding:18px 0;border-bottom:1px solid var(--line)}
+label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:8px}
+input,select{width:100%;border:0;background:transparent;font-size:18px;padding:0;color:var(--ink);outline:none}
+.upload{height:370px;border:1px solid var(--line);background:#eee9e1;display:grid;place-items:center;overflow:hidden;margin:24px 0}
+.upload img{width:100%;height:100%;object-fit:cover}
+.upload .ph{text-align:center;color:var(--muted)}
+.upload .ph b{font-family:Georgia,serif;font-size:52px;font-weight:400;display:block;color:var(--ink);margin-bottom:6px}
+.note{font-size:12px;color:var(--muted);margin-top:12px}
+.analysis{padding-top:96px;text-align:center}
+.analysis h2{font-size:40px}
+.analysis .num{font-family:Georgia,serif;font-size:82px;margin:42px 0 8px}
+.line{height:1px;background:var(--line);position:relative;margin:26px 0}
+.line span{position:absolute;left:0;top:0;height:1px;background:var(--ink);width:0;transition:width .4s}
+.result-title{display:flex;align-items:end;justify-content:space-between;margin:12px 0 18px}
+.result-title h2{font-size:38px}
+.score{font-family:Georgia,serif;font-size:38px}
+.portrait{height:430px;margin:0 -20px}
+.meta{padding:20px 0;border-bottom:1px solid var(--line)}
+.meta h2{font-size:34px;margin-bottom:4px}
+.meta p{margin:0}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.tag{font-size:12px;border:1px solid var(--line);padding:7px 10px;border-radius:999px}
+.actions{display:flex;gap:10px;margin-top:18px}
+.actions .btn{margin:0}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);margin-top:18px;border:1px solid var(--line)}
+.stat{background:var(--paper);padding:18px}
+.stat b{font-family:Georgia,serif;font-size:26px;font-weight:400;display:block}
+.stat span{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.match{padding-top:72px;text-align:center}
+.match h1{font-size:52px}
+.duo{display:flex;justify-content:center;margin:38px 0}
+.face{width:132px;height:168px;overflow:hidden;background:#ddd2c4;border:8px solid var(--paper);margin:0 -14px}
+.face img,.face svg{width:100%;height:100%;object-fit:cover}
+.chat{padding-bottom:170px}
+.chat-head{padding-bottom:18px;border-bottom:1px solid var(--line)}
+.messages{display:flex;flex-direction:column;gap:12px;padding-top:22px}
+.msg{max-width:78%;padding:12px 14px;font-size:15px;line-height:1.4}
+.them{align-self:flex-start;background:#ece7df}
+.me{align-self:flex-end;background:#111;color:#fff}
+.composer{position:absolute;left:20px;right:20px;bottom:84px;border-top:1px solid var(--line);background:var(--paper);padding-top:12px;display:flex;gap:8px}
+.composer input{border:1px solid var(--line);padding:13px 14px;font-size:15px}
+.composer button{width:48px;border:0;background:#111;color:#fff;font-size:18px}
+.profile-card{padding-top:30px;text-align:center}
+.avatar{width:150px;height:190px;margin:0 auto 20px;overflow:hidden;background:#ddd2c4}
+.avatar img,.avatar svg{width:100%;height:100%;object-fit:cover}
+.nav{display:none;position:absolute;left:0;right:0;bottom:0;height:70px;background:rgba(250,248,244,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);justify-content:space-around;align-items:center;padding-bottom:env(safe-area-inset-bottom)}
+.nav.show{display:flex}
+.nav button{border:0;background:transparent;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.nav button.active{color:var(--ink)}
+.small-rule{height:1px;background:var(--line);margin:24px 0}
+</style>
+</head>
+<body>
+<div id="app">
+
+<section id="home" class="screen active hero">
+  <div class="top"><div class="wordmark">DOUBLE</div><span class="eyebrow">V1</span></div>
+  <div class="hero-img">
+    <svg viewBox="0 0 430 380" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="bg" x1="0" x2="1"><stop stop-color="#cfc5b6"/><stop offset="1" stop-color="#e5ddd1"/></linearGradient></defs>
+      <rect width="430" height="380" fill="url(#bg)"/>
+      <ellipse cx="190" cy="148" rx="72" ry="86" fill="#e7bfa8"/>
+      <path d="M112 155c13-101 164-112 172 3-30-44-61-66-92-65-36 1-58 19-80 62z" fill="#655146"/>
+      <path d="M104 380c22-132 66-176 103-176s91 41 117 176z" fill="#ece7e0"/>
+      <rect x="0" y="0" width="430" height="380" fill="none" stroke="rgba(255,255,255,.4)"/>
+    </svg>
+  </div>
+  <div class="hero-copy">
+    <div class="eyebrow">Trouver son double</div>
+    <h1>Quelque part,<br>quelqu’un vous ressemble.</h1>
+    <p>Une expérience de rencontre fondée sur la ressemblance. Découvrez votre double, puis voyez si le lien va plus loin.</p>
+    <button class="btn" onclick="go('profile')">Trouver mon double</button>
+    <button class="btn secondary" onclick="go('discover')">Voir la démo</button>
+  </div>
+</section>
+
+<section id="profile" class="screen">
+  <div class="top"><button class="iconbtn" onclick="go('home')">‹</button><div class="wordmark">DOUBLE</div><span></span></div>
+  <div class="eyebrow">Étape 01</div>
+  <h2>Votre profil</h2>
+  <p>Les informations essentielles pour personnaliser votre recherche.</p>
+  <div class="form">
+    <div class="field"><label>Prénom ou pseudo</label><input id="name" value="Lo"></div>
+    <div class="field"><label>Âge</label><input id="age" type="number" value="25"></div>
+    <div class="field"><label>Ville</label><input id="city" value="Metz"></div>
+    <div class="field"><label>Genre</label><select id="gender"><option>Femme</option><option>Homme</option><option>Autre</option></select></div>
+  </div>
+  <button class="btn" style="margin-top:24px" onclick="go('photo')">Continuer</button>
+</section>
+
+<section id="photo" class="screen">
+  <div class="top"><button class="iconbtn" onclick="go('profile')">‹</button><div class="wordmark">DOUBLE</div><span></span></div>
+  <div class="eyebrow">Étape 02</div>
+  <h2>Votre portrait</h2>
+  <p>Une photo de face, sans filtre, avec une lumière naturelle.</p>
+  <div class="upload" id="photoPreview"><div class="ph"><b>+</b>Ajouter une photo</div></div>
+  <input id="photoInput" type="file" accept="image/*" style="display:none">
+  <button class="btn secondary" onclick="document.getElementById('photoInput').click()">Choisir une photo</button>
+  <button class="btn" onclick="startAnalysis()">Analyser mon visage</button>
+  <div class="note">Prototype : l’analyse de ressemblance est simulée dans cette V1.</div>
+</section>
+
+<section id="analysis" class="screen">
+  <div class="analysis">
+    <div class="wordmark">DOUBLE</div>
+    <div class="eyebrow" style="margin-top:56px">Analyse faciale</div>
+    <h2 id="analysisText">Lecture des proportions</h2>
+    <div class="num" id="pct">0%</div>
+    <div class="line"><span id="bar"></span></div>
+    <p>Comparaison avec les profils disponibles.</p>
+  </div>
+</section>
+
+<section id="discover" class="screen">
+  <div class="top"><span></span><div class="wordmark">DOUBLE</div><span class="eyebrow">96%</span></div>
+  <div class="result-title"><div><div class="eyebrow">Meilleure correspondance</div><h2>Camille</h2></div><div class="score">96%</div></div>
+  <div class="portrait">
+    <svg viewBox="0 0 430 430" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <rect width="430" height="430" fill="#d9cfc2"/>
+      <circle cx="216" cy="168" r="82" fill="#edc2aa"/>
+      <path d="M126 170c12-111 179-117 183 4-38-46-64-67-99-66-39 1-62 20-84 62z" fill="#5d4b42"/>
+      <path d="M91 430c17-133 73-194 123-194s110 55 132 194z" fill="#eee8e0"/>
+      <ellipse cx="184" cy="167" rx="6" ry="4" fill="#3e342f"/><ellipse cx="244" cy="167" rx="6" ry="4" fill="#3e342f"/>
+      <path d="M196 207q20 12 40 0" stroke="#9e6762" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="meta"><h2>Camille, 26</h2><p>Nancy · 48 km</p><div class="tags"><span class="tag">Photo</span><span class="tag">Voyages</span><span class="tag">Cinéma</span></div></div>
+  <div class="actions"><button class="btn secondary" onclick="toast('Profil passé')">Passer</button><button class="btn" onclick="go('detail')">Voir le profil</button></div>
+</section>
+
+<section id="detail" class="screen">
+  <div class="top"><button class="iconbtn" onclick="go('discover')">‹</button><div class="wordmark">DOUBLE</div><span></span></div>
+  <div class="portrait" style="height:355px;margin-top:4px">
+    <svg viewBox="0 0 430 430" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <rect width="430" height="430" fill="#d9cfc2"/>
+      <circle cx="216" cy="168" r="82" fill="#edc2aa"/>
+      <path d="M126 170c12-111 179-117 183 4-38-46-64-67-99-66-39 1-62 20-84 62z" fill="#5d4b42"/>
+      <path d="M91 430c17-133 73-194 123-194s110 55 132 194z" fill="#eee8e0"/>
+      <ellipse cx="184" cy="167" rx="6" ry="4" fill="#3e342f"/><ellipse cx="244" cy="167" rx="6" ry="4" fill="#3e342f"/>
+      <path d="M196 207q20 12 40 0" stroke="#9e6762" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="meta"><div class="eyebrow">96% de ressemblance</div><h2>Camille, 26</h2><p>Nancy · Photographe</p></div>
+  <p>« Toujours partante pour découvrir de nouveaux endroits et rencontrer des personnes inattendues. »</p>
+  <div class="detail-grid">
+    <div class="stat"><b>97%</b><span>Forme du visage</span></div>
+    <div class="stat"><b>95%</b><span>Regard</span></div>
+    <div class="stat"><b>94%</b><span>Sourire</span></div>
+    <div class="stat"><b>93%</b><span>Proportions</span></div>
+  </div>
+  <button class="btn" style="margin-top:20px" onclick="go('match')">J’aime ce profil</button>
+</section>
+
+<section id="match" class="screen">
+  <div class="match">
+    <div class="wordmark">DOUBLE</div>
+    <div class="eyebrow" style="margin-top:64px">Connexion réciproque</div>
+    <h1>Vous vous êtes trouvées.</h1>
+    <p>Camille vous a également ajoutée.</p>
+    <div class="duo">
+      <div class="face" id="myAvatar"><div style="display:grid;place-items:center;height:100%;font-family:Georgia,serif;font-size:32px">VOUS</div></div>
+      <div class="face">
+        <svg viewBox="0 0 200 250"><rect width="200" height="250" fill="#d9cfc2"/><circle cx="100" cy="92" r="48" fill="#edc2aa"/><path d="M47 92c7-65 103-68 107 2-22-29-39-39-58-39-22 0-35 11-49 37z" fill="#5d4b42"/><path d="M24 250c10-90 48-124 76-124s74 38 83 124z" fill="#eee8e0"/></svg>
+      </div>
+    </div>
+    <button class="btn" onclick="go('chat')">Envoyer un message</button>
+    <button class="btn secondary" onclick="go('discover')">Continuer à découvrir</button>
+  </div>
+</section>
+
+<section id="chat" class="screen chat">
+  <div class="top chat-head"><button class="iconbtn" onclick="go('match')">‹</button><div><div class="eyebrow">96% de ressemblance</div><strong>Camille</strong></div><span></span></div>
+  <div class="messages" id="chatbox">
+    <div class="msg them">Coucou. C’est assez troublant de voir la ressemblance.</div>
+    <div class="msg me">Oui, surtout le regard je trouve.</div>
+    <div class="msg them">On devrait comparer nos photos d’enfance.</div>
+  </div>
+  <div class="composer"><input id="message" placeholder="Votre message…"><button onclick="sendMsg()">↑</button></div>
+</section>
+
+<section id="me" class="screen">
+  <div class="top"><span></span><div class="wordmark">DOUBLE</div><span class="eyebrow">Profil</span></div>
+  <div class="profile-card">
+    <div class="avatar" id="mePhoto"><div style="display:grid;place-items:center;height:100%;font-family:Georgia,serif;font-size:30px">LO</div></div>
+    <h2 id="profileTitle">Lo, 25</h2>
+    <p id="profileCity">Metz</p>
+  </div>
+  <div class="small-rule"></div>
+  <div class="field"><label>Profil</label><div>Modifier mes informations</div></div>
+  <div class="field"><label>Photos</label><div onclick="go('photo')">Changer ma photo principale</div></div>
+  <div class="field"><label>Confidentialité</label><div>Gérer ma visibilité</div></div>
+</section>
+
+<nav class="nav" id="nav">
+  <button onclick="go('discover')" data-tab="discover">Découvrir</button>
+  <button onclick="go('chat')" data-tab="chat">Messages</button>
+  <button onclick="go('me')" data-tab="me">Profil</button>
+</nav>
+
+<div id="toast" style="display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:90px;background:#111;color:white;padding:9px 13px;font-size:12px;z-index:30"></div>
+
+</div>
+<script>
+const screens=[...document.querySelectorAll('.screen')];
+const nav=document.getElementById('nav');
+let uploadedSrc=null;
+
+function go(id){
+  screens.forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const show=['discover','chat','me'].includes(id);
+  nav.classList.toggle('show',show);
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+  if(id==='me') syncProfile();
+  window.scrollTo(0,0);
+}
+function syncProfile(){
+  const n=document.getElementById('name').value||'Lo';
+  const a=document.getElementById('age').value||25;
+  const c=document.getElementById('city').value||'Metz';
+  document.getElementById('profileTitle').textContent=`${n}, ${a}`;
+  document.getElementById('profileCity').textContent=c;
+}
+document.getElementById('photoInput').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    uploadedSrc=ev.target.result;
+    document.getElementById('photoPreview').innerHTML=`<img src="${uploadedSrc}" alt="Votre photo">`;
+    document.getElementById('myAvatar').innerHTML=`<img src="${uploadedSrc}" alt="Votre photo">`;
+    document.getElementById('mePhoto').innerHTML=`<img src="${uploadedSrc}" alt="Votre photo">`;
+  };
+  r.readAsDataURL(f);
+});
+function startAnalysis(){
+  go('analysis');
+  let v=0; const pct=document.getElementById('pct'),bar=document.getElementById('bar'),text=document.getElementById('analysisText');
+  const phases=[[22,'Lecture des proportions'],[48,'Analyse du regard'],[74,'Comparaison des traits'],[100,'Correspondance trouvée']];
+  let p=0;
+  const t=setInterval(()=>{
+    v+=2;if(v>100)v=100;
+    pct.textContent=v+'%';bar.style.width=v+'%';
+    if(p<phases.length && v>=phases[p][0]){text.textContent=phases[p][1];p++}
+    if(v>=100){clearInterval(t);setTimeout(()=>go('discover'),700)}
+  },55);
+}
+function sendMsg(){
+  const i=document.getElementById('message'),v=i.value.trim();if(!v)return;
+  const d=document.createElement('div');d.className='msg me';d.textContent=v;document.getElementById('chatbox').appendChild(d);i.value='';
+  setTimeout(()=>{const r=document.createElement('div');r.className='msg them';r.textContent='Oui, j’aime bien cette idée.';document.getElementById('chatbox').appendChild(r)},450);
+}
+document.getElementById('message').addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg()});
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',1200)}
+</script>
+</body>
+</html>
